@@ -1,0 +1,104 @@
+package com.example.basekmm_003
+
+import com.squareup.sqldelight.db.SqlDriver
+import io.ktor.client.HttpClient
+import io.ktor.client.features.HttpTimeout
+import io.ktor.client.features.defaultRequest
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.accept
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.url
+import io.ktor.http.ContentType
+
+import io.ktor.http.contentType
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
+expect class Platform() {
+    val platform: String
+}
+
+expect class DatabaseDriverFactory {
+    fun createDriver(): SqlDriver
+}
+
+class JsonFeaturesApi() {
+    suspend fun getJson(): String = "[\n" +
+            "  {\n" +
+            "    \"string\": \"Hello\",\n" +
+            "    \"lang\": \"en\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Hola\",\n" +
+            "    \"lang\": \"es\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Nǐn hǎo\",\n" +
+            "    \"lang\": \"zh\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Guten Tag\",\n" +
+            "    \"lang\": \"de\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Olá\",\n" +
+            "    \"lang\": \"pt\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Merhaba\",\n" +
+            "    \"lang\": \"tr\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Привет\",\n" +
+            "    \"lang\": \"ru\"\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"string\": \"Salve\",\n" +
+            "    \"lang\": \"it\"\n" +
+            "  }\n" +
+            "]"
+}
+
+
+class JsonApi {
+    suspend fun getLatestMovies(): PreviewMovieResult =
+        KtorClient.httpClient.get {
+           url("https://api.themoviedb.org/3/" + "movie/now_playing")
+           parameter("api_key", "5e30e8afd06d2b8b9aae8eb164c85a29")
+        }
+}
+
+@Serializable
+data class JsonMessage(val string: String?, val lang: String?)
+
+object KtorClient {
+    private val json = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = true
+    }
+    val httpClient = HttpClient {
+        install(JsonFeature) { serializer = KotlinxSerializer(json) }
+        install(HttpTimeout) {
+            socketTimeoutMillis = 30_000
+            requestTimeoutMillis = 30_000
+            connectTimeoutMillis = 30_000
+        }
+        defaultRequest {
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+    }
+}
+
+@Serializable
+data class PreviewMovieResult(val results: List<PreviewMovie>)
+
+@Serializable
+data class PreviewMovie(
+    val id: Int,
+    @SerialName("original_title") val title: String?,
+    @SerialName("poster_path") val posterPath: String?,
+)

@@ -1,0 +1,60 @@
+CREATE TABLE PreviewMovieEntity (
+    id INTEGER NOT NULL PRIMARY KEY,
+    title TEXT,
+    posterPath TEXT
+);
+
+CREATE TABLE MovieEntity (
+    id INTEGER NOT NULL PRIMARY KEY,
+    title TEXT,
+    overview TEXT,
+    originCountry TEXT,
+    posterPath TEXT
+);
+
+CREATE TABLE GenresEntities (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT
+);
+
+getGenresEntities:
+SELECT  *
+FROM GenresEntities;
+
+saveGenresEntities:
+INSERT OR REPLACE
+INTO GenresEntities
+VALUES (?,?);
+
+deleteAllGenresEntities:
+DELETE FROM GenresEntities;
+
+getPreviewMovieEntity:
+SELECT  *
+FROM PreviewMovieEntity
+WHERE id = :id;
+
+getAllPreviewMovies:
+SELECT  *
+FROM PreviewMovieEntity;
+
+savePreviewMovies:
+INSERT OR REPLACE
+INTO PreviewMovieEntity
+VALUES (?,?,?);
+
+deleteAllPreviewMovie:
+DELETE FROM PreviewMovieEntity;
+
+getMovieEntity:
+SELECT  *
+FROM MovieEntity
+WHERE id = :id;
+
+saveMovies:
+INSERT OR REPLACE
+INTO MovieEntity
+VALUES (?,?,?,?,?);
+
+deleteAllMovie:
+DELETE FROM MovieEntity;
