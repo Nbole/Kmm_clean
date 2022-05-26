@@ -15,7 +15,7 @@ struct RocketLaunchRow: View {
 }
 
 struct ContentView: View {
-    
+
   @ObservedObject private(set) var viewModel: ViewModel
     enum LoadableLaunches {
             case loading
@@ -46,10 +46,12 @@ struct ContentView: View {
     
     
     class ViewModel: ObservableObject {
-        let sdk: JsonApi
+        //let sdk: JsonApi
+        var sdk: MovieApiImpl
         @Published var launches = LoadableLaunches.loading
 
-        init(sdk: JsonApi) {
+    
+        init(sdk: MovieApiImpl) {//JsonApi) {
             self.sdk = sdk
             self.loadLaunches()
         }
@@ -58,10 +60,10 @@ struct ContentView: View {
             self.launches = .loading
             sdk.getLatestMovies(completionHandler: { launch, error in
                 if(launch != nil) {
-                    self.launches = .result("\(launch)")
+                    print((launch as PreviewMovieResult?)?.results as Any)
+                    self.launches = .result("\(String(describing: launch))")
                 } else {
                     self.launches = .error("go fuck yourself")
-                    
                 }
             }
             )

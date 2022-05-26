@@ -16,6 +16,8 @@ import io.ktor.http.contentType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 expect class Platform() {
     val platform: String
@@ -25,51 +27,14 @@ expect class DatabaseDriverFactory {
     fun createDriver(): SqlDriver
 }
 
-class JsonFeaturesApi() {
-    suspend fun getJson(): String = "[\n" +
-            "  {\n" +
-            "    \"string\": \"Hello\",\n" +
-            "    \"lang\": \"en\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Hola\",\n" +
-            "    \"lang\": \"es\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Nǐn hǎo\",\n" +
-            "    \"lang\": \"zh\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Guten Tag\",\n" +
-            "    \"lang\": \"de\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Olá\",\n" +
-            "    \"lang\": \"pt\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Merhaba\",\n" +
-            "    \"lang\": \"tr\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Привет\",\n" +
-            "    \"lang\": \"ru\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"string\": \"Salve\",\n" +
-            "    \"lang\": \"it\"\n" +
-            "  }\n" +
-            "]"
+interface JsonApi {
+    fun getHttpClient(): HttpClient
+}
+class JsonApiImpl: JsonApi {
+    override fun getHttpClient(): HttpClient = KtorClient.httpClient
 }
 
-
-class JsonApi {
-    suspend fun getLatestMovies(): PreviewMovieResult =
-        KtorClient.httpClient.get {
-           url("https://api.themoviedb.org/3/" + "movie/now_playing")
-           parameter("api_key", "5e30e8afd06d2b8b9aae8eb164c85a29")
-        }
-}
+fun provideHttpClient(): HttpClient = JsonApiImpl().getHttpClient()
 
 @Serializable
 data class JsonMessage(val string: String?, val lang: String?)
@@ -93,6 +58,25 @@ object KtorClient {
     }
 }
 
+class MovieApiImpl: KoinComponent {
+    private val httpClient: HttpClient by inject()
+
+    suspend fun getLatestMovies(): PreviewMovieResult =
+        httpClient.get {
+            url("https://api.themoviedb.org/3/" + "movie/now_playing")
+            parameter("api_key", "5e30e8afd06d2b8b9aae8eb164c85a29")
+        }
+}
+
+/*
+class MovieApiImpl(private val httpClient: HttpClient) : MovieApiContract {
+    override suspend fun getLatestMovies(): PreviewMovieResult =
+        httpClient.get {
+            url("https://api.themoviedb.org/3/" + "movie/now_playing")
+            parameter("api_key", "5e30e8afd06d2b8b9aae8eb164c85a29")
+        }
+}
+*/
 @Serializable
 data class PreviewMovieResult(val results: List<PreviewMovie>)
 

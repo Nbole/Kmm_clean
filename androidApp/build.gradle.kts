@@ -32,4 +32,8 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("io.insert-koin:koin-android:3.2.0")
+    implementation ("io.insert-koin:koin-android-compat:3.2.0")
+    implementation ("io.insert-koin:koin-androidx-workmanager:3.2.0")
+    implementation ("io.insert-koin:koin-androidx-navigation:3.2.0")
 }
