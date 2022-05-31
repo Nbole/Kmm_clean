@@ -78,6 +78,7 @@ android {
 }
 dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    implementation("org.junit.jupiter:junit-jupiter")
 }
 
 sqldelight {

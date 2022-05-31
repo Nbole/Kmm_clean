@@ -47,20 +47,24 @@ struct ContentView: View {
     
     class ViewModel: ObservableObject {
         //let sdk: JsonApi
-        var sdk: MovieApiImpl
+        var sdk: MovieApi
         @Published var launches = LoadableLaunches.loading
 
     
-        init(sdk: MovieApiImpl) {//JsonApi) {
+        init(sdk: MovieApi) {//JsonApi) {
             self.sdk = sdk
+            print(sdk)
             self.loadLaunches()
         }
 
         func loadLaunches() {
             self.launches = .loading
+    
             sdk.getLatestMovies(completionHandler: { launch, error in
+                print(launch as Any)
+                print(error as Any)
                 if(launch != nil) {
-                    print((launch as PreviewMovieResult?)?.results as Any)
+                    print(launch as Any)
                     self.launches = .result("\(String(describing: launch))")
                 } else {
                     self.launches = .error("go fuck yourself")

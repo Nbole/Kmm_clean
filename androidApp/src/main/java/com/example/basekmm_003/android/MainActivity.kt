@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.basekmm_003.MovieApiContract
+import com.example.basekmm_003.MovieApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
     private val mainScope = MainScope()
-    private val sdk: MovieApiContract by inject()
+    private val sdk: MovieApi by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
