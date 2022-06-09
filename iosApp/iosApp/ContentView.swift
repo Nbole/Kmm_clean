@@ -2,12 +2,11 @@ import SwiftUI
 import shared
 
 struct RocketLaunchRow: View {
-    var jsonMessage: JsonMessage
 
     var body: some View {
         HStack() {
             VStack(alignment: .leading, spacing: 10.0) {
-                Text("Launch name: \(jsonMessage)")
+                Text("Launch name:")
             }
             Spacer()
         }
@@ -19,7 +18,7 @@ struct ContentView: View {
   @ObservedObject private(set) var viewModel: ViewModel
     enum LoadableLaunches {
             case loading
-            case result(String)
+            case result([PreviewMovie])
             case error(String)
         }
     
@@ -35,8 +34,28 @@ struct ContentView: View {
             return AnyView(Text("Loading...").multilineTextAlignment(.center))
 
         case .result(let launchet):
+            print(launchet)
             return AnyView(
-                Text(launchet)
+                List {
+                    ForEach(launchet, id: \.id) { movie in
+                        HStack {
+                            AsyncImage(
+                                url: URL(
+                                string: "https://image.tmdb.org/t/p/original" + (movie.posterPath ?? "")
+                            ),
+                            content: { image in
+                            image.resizable()
+                                 .aspectRatio(contentMode: .fit)
+                                 .frame(width: 100, height: 100)
+                            },
+                            placeholder: {
+                            ProgressView()
+                            }
+                            )
+                            Text(movie.title ?? "")
+                        }
+                    }.navigationTitle("Ultimos estrenos")
+                }
             )
 
         case .error(let description):
@@ -46,12 +65,11 @@ struct ContentView: View {
     
     
     class ViewModel: ObservableObject {
-        //let sdk: JsonApi
         var sdk: MovieApi
         @Published var launches = LoadableLaunches.loading
 
     
-        init(sdk: MovieApi) {//JsonApi) {
+        init(sdk: MovieApi) {
             self.sdk = sdk
             print(sdk)
             self.loadLaunches()
@@ -64,8 +82,7 @@ struct ContentView: View {
                 print(launch as Any)
                 print(error as Any)
                 if(launch != nil) {
-                    print(launch as Any)
-                    self.launches = .result("\(String(describing: launch))")
+                    self.launches = .result(launch ?? [])
                 } else {
                     self.launches = .error("go fuck yourself")
                 }

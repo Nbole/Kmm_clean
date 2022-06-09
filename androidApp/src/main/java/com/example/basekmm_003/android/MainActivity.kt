@@ -4,25 +4,30 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.basekmm_003.MovieApi
-import kotlinx.coroutines.MainScope
+import androidx.lifecycle.lifecycleScope
+import com.example.basekmm_003.data.remote.WResponse
+import com.example.basekmm_003.domain.MovieUseCase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import name.PreviewMovieEntity
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
-    private val mainScope = MainScope()
-    private val sdk: MovieApi by inject()
+    private val sdk: MovieUseCase by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val tv: TextView = findViewById(R.id.text_view)
-
-        mainScope.launch {
+        // TODO: Agregar Compose
+        // TODO: Agregar el RepeatLifeCycle
+        lifecycleScope.launch {
+            val l: Flow<WResponse<List<PreviewMovieEntity>?>> = sdk.getLatestMovies()
             kotlin.runCatching {
-                val l = sdk.getLatestMovies().toString()
-                tv.text = l
+                l.collect { response ->
+                    tv.text = response.toString()
+                }
             }.onSuccess {
                 Log.d("onSuccess", it.toString())
             }.onFailure {
