@@ -8,6 +8,7 @@ class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         initKoin {
+            modules(viewModelModule)
             androidContext(this@BaseApp)
         }
     }

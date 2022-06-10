@@ -4,34 +4,34 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.basekmm_003.data.remote.WResponse
-import com.example.basekmm_003.domain.MovieUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import name.PreviewMovieEntity
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val sdk: MovieUseCase by inject()
+    private val viewModel: MovieDetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val tv: TextView = findViewById(R.id.text_view)
-        // TODO: Agregar Compose
-        // TODO: Agregar el RepeatLifeCycle
+
         lifecycleScope.launch {
-            val l: Flow<WResponse<List<PreviewMovieEntity>?>> = sdk.getLatestMovies()
-            kotlin.runCatching {
-                l.collect { response ->
-                    tv.text = response.toString()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val movies: Flow<WResponse<List<PreviewMovieEntity>>> = viewModel.getMovies()
+                kotlin.runCatching {
+                    movies.collect { tv.text = it.toString() }
+                }.onSuccess {
+                    Log.d("onSuccess", it.toString())
+                }.onFailure {
+                    Log.d("onFailure", it.toString())
                 }
-            }.onSuccess {
-                Log.d("onSuccess", it.toString())
-            }.onFailure {
-                Log.d("onFailure", it.toString())
             }
         }
     }

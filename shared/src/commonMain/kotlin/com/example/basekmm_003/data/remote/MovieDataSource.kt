@@ -13,21 +13,21 @@ val movieRemoteModule = module {
     single<MovieRemote> { MovieRemoteImpl(get()) }
 }
 
-interface MovieRemote { suspend fun getLatestMovies(): KtorResponse<PreviewMovieResult?> }
+interface MovieRemote { suspend fun getLatestMovies(): SerialResponse<PreviewMovieResult?> }
 
 class MovieRemoteImpl(private val httpClient: HttpClient) : MovieRemote {
-    override suspend fun getLatestMovies(): KtorResponse<PreviewMovieResult?> {
+    override suspend fun getLatestMovies(): SerialResponse<PreviewMovieResult?> {
         return try {
-            KtorResponse.Success(
+            SerialResponse.Success(
                 httpClient.get {
                     url("https://api.themoviedb.org/3/" + "movie/now_playing")
                     parameter("api_key", "5e30e8afd06d2b8b9aae8eb164c85a29")
                 }
             )
         } catch (e: ClientRequestException) {
-            KtorResponse.Error(data = null, message = e.message)
+            SerialResponse.Error(data = null, message = e.message)
         } catch (e: IOException) {
-            KtorResponse.Error(data = null, message = e.message.orEmpty())
+            SerialResponse.Error(data = null, message = e.message.orEmpty())
         }
     }
 }

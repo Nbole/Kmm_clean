@@ -1,11 +1,13 @@
 package com.example.basekmm_003.data
 
-import com.example.basekmm_003.data.remote.KtorResponse
+import com.example.basekmm_003.data.remote.SerialResponse
 import com.example.basekmm_003.data.remote.WResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 /**
@@ -13,17 +15,17 @@ import kotlinx.coroutines.flow.map
  */
 inline fun <ResultType, RequestType> networkBoundResource(
     crossinline loadFromDb: () -> Flow<ResultType>,
-    crossinline netWorkRequest: suspend () -> KtorResponse<RequestType>,
-    crossinline saveCall: suspend (KtorResponse<RequestType>) -> Unit
+    crossinline netWorkRequest: suspend () -> SerialResponse<RequestType>,
+    crossinline saveCall: suspend (SerialResponse<RequestType>) -> Unit
 ): Flow<WResponse<ResultType>> = flow {
     emit(WResponse.Loading(loadFromDb().firstOrNull()))
-    val netWorkKtorResponse: KtorResponse<RequestType> = netWorkRequest()
+    val netWorkSerialResponse: SerialResponse<RequestType> = netWorkRequest()
     emitAll(
-        if (netWorkKtorResponse is KtorResponse.Success) {
-            saveCall(netWorkKtorResponse)
+        if (netWorkSerialResponse is SerialResponse.Success) {
+            saveCall(netWorkSerialResponse)
             loadFromDb().map { WResponse.Success(it) }
         } else {
-            val error = netWorkKtorResponse as KtorResponse.Error
+            val error = netWorkSerialResponse as SerialResponse.Error
             loadFromDb().map { WResponse.Error(error.message, it) }
         }
     )

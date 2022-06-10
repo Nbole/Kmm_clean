@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 import name.PreviewMovieEntity
 
 interface Contractors {
-    fun getLatestMovies(): Flow<WResponse<List<PreviewMovieEntity>?>>
+    fun getLatestMovies(): Flow<WResponse<List<PreviewMovieEntity>>>
 }
