@@ -18,6 +18,10 @@ android {
             isMinifyEnabled = false
         }
     }
+    buildFeatures {
+        dataBinding = true
+        compose = true
+    }
 }
 
 dependencies {
@@ -53,5 +57,9 @@ dependencies {
     implementation("androidx.compose.material:material:1.2.0-beta03")
     implementation("androidx.compose.runtime:runtime-livedata:1.2.0-beta03")
     implementation("androidx.compose.ui:ui:1.2.0-beta03")
+    implementation ("androidx.compose.ui:ui-tooling:1.2.0-beta03")
     implementation("androidx.compose.ui:ui-tooling-preview:1.2.0-beta03")
+    implementation ("androidx.compose.ui:ui:1.2.0-beta03")
+    implementation ("io.coil-kt:coil:1.4.0")
+    implementation ("io.coil-kt:coil-compose:1.4.0")
 }
