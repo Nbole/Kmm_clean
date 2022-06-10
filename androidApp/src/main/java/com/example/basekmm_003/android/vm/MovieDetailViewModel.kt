@@ -1,6 +1,8 @@
-package com.example.basekmm_003.android
+package com.example.basekmm_003.android.vm
 
 import androidx.lifecycle.viewModelScope
+import com.example.basekmm_003.android.ui.BaseState
+import com.example.basekmm_003.android.MovieStates
 import com.example.basekmm_003.data.remote.WResponse
 import com.example.basekmm_003.domain.MovieUseCase
 import com.example.basekmm_003.presentation.PreviewMovieDisplay

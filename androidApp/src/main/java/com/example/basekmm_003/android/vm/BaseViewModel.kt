@@ -1,7 +1,10 @@
-package com.example.basekmm_003.android
+package com.example.basekmm_003.android.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.basekmm_003.android.ui.UiEffect
+import com.example.basekmm_003.android.ui.UiEvent
+import com.example.basekmm_003.android.ui.UiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.example.basekmm_003.android
+package com.example.basekmm_003.android.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import coil.compose.rememberImagePainter
+import com.example.basekmm_003.android.MovieStates
+import com.example.basekmm_003.android.vm.MovieDetailViewModel
 import com.example.basekmm_003.presentation.PreviewMovieDisplay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
