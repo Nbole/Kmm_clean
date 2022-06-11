@@ -21,7 +21,7 @@ class MovieRemoteImpl(private val httpClient: HttpClient) : MovieRemote {
             SerialResponse.Success(
                 httpClient.get {
                     url("https://api.themoviedb.org/3/" + "movie/now_playing")
-                    parameter("api_key", "5e30e8afd06d2b8b9aae8eb164c85a29")
+                    parameter("api_key", "")
                 }
             )
         } catch (e: ClientRequestException) {
