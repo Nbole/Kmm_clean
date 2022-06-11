@@ -27,6 +27,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.2")
                 implementation("io.ktor:ktor-client-serialization:1.6.5")
                 implementation("com.squareup.sqldelight:runtime:1.5.3")
+                implementation("io.insert-koin:koin-core:3.2.0")
             }
         }
         val commonTest by getting {
@@ -36,6 +37,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
+                implementation("io.insert-koin:koin-core:3.2.0")
                 implementation("io.ktor:ktor-client-android:1.6.5")
                 implementation("com.squareup.sqldelight:android-driver:1.5.3")
             }
@@ -73,6 +75,9 @@ android {
         minSdk = 21
         targetSdk = 32
     }
+}
+dependencies {
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
 }
 
 sqldelight {
