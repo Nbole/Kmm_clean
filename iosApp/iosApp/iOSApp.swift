@@ -5,9 +5,9 @@ import shared
 struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
-        let sdk: MovieApi = MovieApiImpl()
+        let movieUseCase = MovieUseCase()
             WindowGroup {
-                ContentView(viewModel: .init(sdk: sdk))
+                ContentView(viewModel: .init(sdk: movieUseCase))
             }
         }
 }

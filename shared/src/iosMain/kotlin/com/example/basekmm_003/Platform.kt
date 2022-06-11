@@ -4,11 +4,8 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
-import org.koin.core.module.Module
-import org.koin.dsl.module
 import platform.Foundation.NSRunLoop
 import platform.Foundation.performBlock
-import platform.UIKit.UIDevice
 import kotlin.coroutines.CoroutineContext
 
 actual class DatabaseDriverFactory {

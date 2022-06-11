@@ -18,7 +18,7 @@ struct ContentView: View {
   @ObservedObject private(set) var viewModel: ViewModel
     enum LoadableLaunches {
             case loading
-            case result([PreviewMovie])
+            case result([PreviewMovieDisplay])
             case error(String)
         }
     
@@ -65,11 +65,11 @@ struct ContentView: View {
     
     
     class ViewModel: ObservableObject {
-        var sdk: MovieApi
+        var useCase: MovieUseCase
         @Published var launches = LoadableLaunches.loading
 
     
-        init(sdk: MovieApi) {
+        init(sdk: movieUseCase) {
             self.sdk = sdk
             print(sdk)
             self.loadLaunches()
@@ -78,13 +78,13 @@ struct ContentView: View {
         func loadLaunches() {
             self.launches = .loading
     
-            sdk.getLatestMovies(completionHandler: { launch, error in
+            useCase.getLatestMovies(completionHandler: { launch, error in
                 print(launch as Any)
                 print(error as Any)
                 if(launch != nil) {
                     self.launches = .result(launch ?? [])
                 } else {
-                    self.launches = .error("go fuck yourself")
+                    self.launches = .error("Error")
                 }
             }
             )
