@@ -100,7 +100,7 @@ fun MovieCard(
         ) {
             LoadImageFromUrl(
                 movieDisplay.posterPath,
-                "",
+                "https://image.tmdb.org/t/p/original",
                 Modifier.size(100.dp)
             )
             Column {
